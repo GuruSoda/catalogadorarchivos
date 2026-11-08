@@ -1,0 +1,53 @@
+<?Guru
+var("catalogo", http.parametro("catalogo"))
+var("id", http.parametro("id"))
+var("opciones", http.parametro("o"))
+var("archivo")
+var("ruta_completa")
+
+if (sql.abrir(config.leer(http.absoluto("catalogos.conf"), catalogo, "catalogo"))) {
+	var("consulta")
+	consulta=str.concat("select e.directorio, d.NOMBRE,a.NOMBRE
+									from CATALOGO c, ARCHIVO a, DIRECTORIO d, ETIQUETA e
+									where c.ID_ARCHIVO = a.ID_ARCHIVO and c.ID_DIRECTORIO = d.ID_DIRECTORIO and
+									      c.id_catalogo = '", id, "'")
+
+	if (sql.ejecutar(consulta)) {
+		sql.extraer()
+		archivo=sql.columna("3")
+		ruta_completa=str.concat(sql.columna("1"),sql.columna("2"),sql.columna("3"))
+
+		if (eq(archivo, "")) {
+			print ("Archivo no catalogado.")
+		}
+
+	}
+	
+	sql.cerrar()
+} else {
+	println ("Error abriendo el catalogo")
+}
+#
+#if (eq(opciones,"")) {
+#	http.header("Content-Description", str.concat("Descargar ", archivo))
+#	http.header("Content-Disposition", str.concat("attachment; filename=\"", archivo,"\""))
+#	http.header("Content-Transfer-Encoding", "binary")
+#	http.header("Content-Type", "application/octet-stream")
+#}
+#
+#http.archivo(ruta_completa)
+
+http.header("Content-Description", str.concat("Descargar ", archivo))
+http.header("Content-Transfer-Encoding", "binary")
+# http.header("Content-Type", "application/octet-stream")
+http.header("Content-Type", http.mime(ruta_completa))
+
+if (eq(opciones,"v"))
+        http.header("Content-Disposition", str.concat("inline; filename=\"", archivo,"\""))
+else
+        http.header("Content-Disposition", str.concat("attachment; filename=\"", archivo,"\""))
+
+http.archivo(ruta_completa)
+
+?>
+

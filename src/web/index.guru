@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=iso8859-1" />
+	<title>Catalogador de Archivos</title>
+	<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+</head>
+<body>
+<!-- Header -->
+<div id="header">
+	<div class="shell">
+		<!-- Logo + Top Nav -->
+		<div id="top">
+			<h1>Catalogador de Archivos</h1>
+			<div id="top-navigation">
+				Welcome <a href="#"><strong>Administrator</strong></a>
+				<span>|</span>
+				<a href="#">Help</a>
+				<span>|</span>
+				<a href="#">Profile Settings</a>
+				<span>|</span>
+				<a href="#">Log out</a>
+			</div>
+		</div>
+		<!-- End Logo + Top Nav -->
+		
+		<!-- Main Nav -->
+		<div id="navigation">
+			<ul>
+			    <li><a href="index.guru" class="active"><span>Buscar</span></a></li>
+			    <li><a href="navegar.guru"><span>Explorar Catalogados</span></a></li>
+			</ul>
+		</div>
+		<!-- End Main Nav -->
+	</div>
+</div>
+<!-- End Header -->
+
+<!-- Container -->
+<div id="container">
+	<div class="shell">
+		
+		<!-- Main -->
+		<div id="main">
+			<div class="cl">&nbsp;</div>
+			
+			<!-- Content -->
+			<div id="content" style="width:100%">
+				
+				<!-- Box -->
+				<div class="box">
+					<!-- Box Head -->
+					<div class="box-head">
+						<h2>Busqueda</h2>
+					</div>
+					<!-- End Box Head -->
+					
+					<!--		<form action="resultado.guru" method="post" enctype="multipart/form-data"> -->
+					<form action="resultado.guru" method="get"> 
+						<!-- Form -->
+						<div class="form">
+								<p>
+									<span class="req">max 100 symbols</span>
+									<label>Nombre Archivo/Directorio<span> (Obligatorio)</span></label>
+									<input type="text" name="b" class="field size1" style="width:99%"/> 
+								</p>
+
+								<p style="text-align: center;">
+									<input type="checkbox" name="ayd" class="checkbox" />Archivos y Directorios
+									<input type="checkbox" name="a" class="checkbox" />Archivos
+									<input type="checkbox" name="d" class="checkbox" />Directorios
+								</p>
+						
+								<span class="req">Lista catalogos disponibles</span>
+									<label>Catalogo</label>
+								<?Guru 
+									var("tmp")
+									var("total_tokens", "0")
+									var("indice", "1")
+									tmp=config.secciones(http.absoluto("catalogos.conf")) 
+									total_tokens=token.extraer(tmp, "|") 
+								?>
+	
+								<select name="catalogo" class="field size1" style="width:99%">
+								<?Guru 
+									while (total_tokens) { 
+										tmp=str.trim(token.token(indice))
+								?>
+									<option value="<?Guru print(tmp) ?>"><?Guru print(str.trim(config.leer(http.absoluto("catalogos.conf"), tmp, "descripcion"))) ?></option>
+								<?Guru
+										total_tokens=dec(total_tokens) 
+										indice=inc(indice) 
+									}
+								?>
+								</select>
+								</p>	
+															
+						</div>
+						<!-- End Form -->
+						
+						<!-- Form Buttons -->
+						<div class="buttons">
+							<input type="submit" name="bt" class="button" value="Buscar" />
+						</div>
+						<!-- End Form Buttons -->
+					</form>
+				</div>
+				<!-- End Box -->
+
+			</div>
+			<!-- End Content -->
+			
+			<div class="cl">&nbsp;</div>			
+		</div>
+		<!-- Main -->
+	</div>
+</div>
+<!-- End Container -->
+
+<!-- Footer -->
+<div id="footer">
+	<div class="shell">
+		<span class="left">&copy; 2013 - PlanetaGuru</span>
+		<span class="right">
+			Design by <a href="http://www.planetaguru.com.ar" target="_blank" title="www.planetaguru.com.ar">El Guru</a>
+		</span>
+	</div>
+</div>
+<!-- End Footer -->
+	
+</body>
+</html>

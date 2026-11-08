@@ -1,0 +1,4 @@
+# export FIREBIRD=`dirname $0`/../lib
+export FIREBIRD=/opt/Catalogador/lib
+export LD_LIBRARY_PATH=$FIREBIRD
+

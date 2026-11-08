@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Catalogar", "Catalogar\Catalogar.vcxproj", "{8F78C324-0860-4DEA-879B-2AB834806E98}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Buscar", "Buscar\Buscar.vcxproj", "{61FDEA95-5670-4EA2-A07E-8A41AA359B41}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Comparar", "Comparar\Comparar.vcxproj", "{A4A5825B-2C44-47A8-A53F-A2F6161FD83C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F78C324-0860-4DEA-879B-2AB834806E98}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8F78C324-0860-4DEA-879B-2AB834806E98}.Debug|Win32.Build.0 = Debug|Win32
+		{8F78C324-0860-4DEA-879B-2AB834806E98}.Release|Win32.ActiveCfg = Release|Win32
+		{8F78C324-0860-4DEA-879B-2AB834806E98}.Release|Win32.Build.0 = Release|Win32
+		{61FDEA95-5670-4EA2-A07E-8A41AA359B41}.Debug|Win32.ActiveCfg = Debug|Win32
+		{61FDEA95-5670-4EA2-A07E-8A41AA359B41}.Debug|Win32.Build.0 = Debug|Win32
+		{61FDEA95-5670-4EA2-A07E-8A41AA359B41}.Release|Win32.ActiveCfg = Release|Win32
+		{61FDEA95-5670-4EA2-A07E-8A41AA359B41}.Release|Win32.Build.0 = Release|Win32
+		{A4A5825B-2C44-47A8-A53F-A2F6161FD83C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A4A5825B-2C44-47A8-A53F-A2F6161FD83C}.Debug|Win32.Build.0 = Debug|Win32
+		{A4A5825B-2C44-47A8-A53F-A2F6161FD83C}.Release|Win32.ActiveCfg = Release|Win32
+		{A4A5825B-2C44-47A8-A53F-A2F6161FD83C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,85 @@
+drop table catalogo;COMMIT;
+drop table archivo;COMMIT;
+drop table directorio;COMMIT;
+drop table etiqueta;COMMIT;
+
+create table directorio (
+    id_directorio INTEGER NOT NULL,
+	nombre        CHAR (268) NOT NULL,
+
+    PRIMARY KEY(id_directorio)
+);COMMIT;
+
+create table archivo (
+	id_archivo    INTEGER NOT NULL,
+	nombre        CHAR (64) NOT NULL,
+	tamanio       INTEGER NOT NULL,
+	crc           CHAR (10) NOT NULL,
+	sha1          CHAR (50) NOT NULL,
+
+    PRIMARY KEY(id_archivo),
+);COMMIT;
+
+create table etiqueta(
+     id_etiqueta SMALLINT NOT NULL,
+     nombre      CHAR (32) NOT NULL,
+     
+     PRIMARY KEY(id_etiqueta)
+);COMMIT;
+
+create table catalogo(
+     id_etiqueta      SMALLINT NOT NULL,
+     id_directorio    INTEGER NOT NULL,
+     id_archivo       INTEGER NOT NULL,
+
+     FOREIGN KEY(id_directorio) REFERENCES directorio(id_directorio),
+     FOREIGN KEY(id_archivo) REFERENCES archivo(id_archivo),
+     FOREIGN KEY(id_etiqueta) REFERENCES etiqueta(id_etiqueta)
+);COMMIT;
+
+CREATE GENERATOR GEN_ID_ARCHIVO;
+CREATE GENERATOR GEN_ID_DIRECTORIO;
+CREATE GENERATOR GEN_ID_ETIQUETA;
+CREATE GENERATOR GEN_ID_CATALOGO;
+
+SET TERM ^;
+
+CREATE TRIGGER BI_ARCHIVO FOR ARCHIVO
+ACTIVE BEFORE INSERT
+POSITION 0
+AS
+BEGIN
+    IF (NEW.ID_ARCHIVO IS NULL) THEN
+        NEW.ID_ARCHIVO = GEN_ID(GEN_ID_ARCHIVO, 1);
+END ^
+
+CREATE TRIGGER BI_CATALOGO FOR CATALOGO
+ACTIVE BEFORE INSERT
+POSITION 0
+AS
+BEGIN
+    IF (NEW.ID_CATALOGO IS NULL) THEN
+        NEW.ID_CATALOGO = GEN_ID(GEN_ID_CATALOGO, 1);
+END ^
+
+CREATE TRIGGER BI_DIRECTORIO FOR DIRECTORIO
+ACTIVE BEFORE INSERT
+POSITION 0
+AS
+BEGIN
+    NEW.NOMBRE = TRIM(NEW.NOMBRE);
+    IF (NEW.ID_DIRECTORIO IS NULL) THEN
+        NEW.ID_DIRECTORIO = GEN_ID(GEN_ID_DIRECTORIO, 1);
+END ^
+
+CREATE TRIGGER BI_ETIQUETA FOR ETIQUETA
+ACTIVE BEFORE INSERT
+POSITION 0
+AS
+BEGIN
+    NEW.NOMBRE = TRIM(NEW.NOMBRE);
+    IF (NEW.ID_ETIQUETA IS NULL) THEN
+        NEW.ID_ETIQUETA = GEN_ID(GEN_ID_ETIQUETA, 1);
+END ^
+
+SET TERM ;^

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+
+export LD_LIBRARY_PATH=`dirname $0`/lib
+export FIREBIRD=$LD_LIBRARY_PATH
+export FIREBIRD_TMP=`dirname $0`/tmp
+export FIREBIRD_MSG=$LD_LIBRARY_PATH
+export FIREBIRD_LOCK=$FIREBIRD_TMP
+
+EXEC=`dirname $0`/bin/catalogador
+
+$EXEC "$@"
+

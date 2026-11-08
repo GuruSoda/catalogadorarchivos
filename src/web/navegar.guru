@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=iso8859-1" />
+	<title>Catalogador de Archivos</title>
+	<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+</head>
+<body>
+<!-- Header -->
+<div id="header">
+	<div class="shell">
+		<!-- Logo + Top Nav -->
+		<div id="top">
+			<h1><a href="#">Catalogador de Archivos</a></h1>
+			<div id="top-navigation">
+				Welcome <a href="#"><strong>Administrator</strong></a>
+				<span>|</span>
+				<a href="#">Help</a>
+				<span>|</span>
+				<a href="#">Profile Settings</a>
+				<span>|</span>
+				<a href="#">Log out</a>
+			</div>
+		</div>
+		<!-- End Logo + Top Nav -->
+		
+		<!-- Main Nav -->
+		<div id="navigation">
+			<ul>
+			    <li><a href="index.guru"><span>Busqueda</span></a></li>
+			    <li><a href="navegar.guru" class="active"><span>Navegar</span></a></li>
+			</ul>
+		</div>
+		<!-- End Main Nav -->
+	</div>
+</div>
+<!-- End Header -->
+
+<?Guru
+var("catalogo", http.parametro("catalogo"))
+var("ruta",http.parametro("dir"))
+var("consulta")
+
+if (eq(ruta, "")) ruta = "/"
+?>
+<!-- Container -->
+<div id="container">
+	<div class="shell">
+<!--
+	<?Guru 
+	println(http.parametro("dir"))
+	println(ruta)
+	?>
+-->
+
+	<?Guru if (ne(catalogo,""))	{ 
+	?>
+
+		<!-- Small Nav -->
+		<div class="small-nav">
+			<a href="navegar.guru">Catalogos</a>
+			<span>&gt;</span>
+			<a href="<?Guru print("?catalogo=", catalogo, "&dir=/" )?>" ><?Guru print(catalogo)?></a>
+			<span>&gt;</span>
+			<?Guru 
+				var("lugar", "2")
+				var("total", token.extraer(ruta, "/"))
+				var("acceso", "")
+				var("ultimo_dir","/")
+
+				while (lt(lugar, total)) {
+					acceso = (acceso "/" token.token(lugar))
+				
+					if (ne(lugar, dec(total))) { 
+						ultimo_dir=str.concat(acceso, "/")
+						println("<a href=\"?catalogo=", catalogo,"&dir=",ultimo_dir,"\">", token.token(lugar), "</a>")
+ 						println("<span> / </span>")
+					} else println("<span>",token.token(lugar), "</span>")
+
+					lugar=inc(lugar)
+				}
+			?>
+		</div>
+		<!-- End Small Nav -->
+		<br />
+	<?Guru } ?>
+		<!-- Main -->
+		<div id="main">
+			<div class="cl">&nbsp;</div>
+			
+			<!-- Content -->
+			<div id="content">
+			<?Guru if (eq(catalogo,"")) { ?>
+				<!-- Box -->
+				<div class="box">
+					<!-- Box Head -->
+					<div class="box-head">
+						<h2>Seleccionar Catalogo</h2>
+					</div>
+					<!-- End Box Head -->
+					
+					<form action="navegar.guru" method="get"> 
+						<!-- Form -->
+						<div class="form">
+								<span class="req">Listado de Catalogos Disponibles</span>
+									<label>Catalogo</label>
+								<?Guru 
+									var("tmp")
+									var("total_tokens", "0")
+									var("indice", "1")
+									tmp=config.secciones(http.absoluto("catalogos.conf")) 
+									total_tokens=token.extraer(tmp, "|") 
+								?>
+	
+								<select name="catalogo" class="field size1" style="width:99%">
+								<?Guru 
+									while (total_tokens) { 
+										tmp=str.trim(token.token(indice))
+								?>
+									<option value="<?Guru print(tmp) ?>"><?Guru print(str.trim(config.leer(http.absoluto("catalogos.conf"), tmp, "descripcion"))) ?></option>
+								<?Guru
+										total_tokens=dec(total_tokens) 
+										indice=inc(indice) 
+									}
+								?>
+								</select>
+								</p>	
+						</div>
+						<!-- End Form -->
+						
+						<!-- Form Buttons -->
+						<div class="buttons">
+							<input type="submit" class="button" value="Seleccionar" />
+						</div>
+						<!-- End Form Buttons -->
+					</form>
+				</div>
+				<!-- End Box -->
+            <?Guru } else { ?>
+
+				<!-- Box -->
+				<div class="box">
+					<!-- Box Head -->
+					<div class="box-head">
+						<h2 class="left">Contenido del Catalogo</h2>
+						<div class="right">
+							<label>Buscar</label>
+							<input type="text" class="field small-field" />
+							<input type="submit" class="button" value="search" />
+						</div>
+					</div>
+					<!-- End Box Head -->	
+
+					<!-- Table -->
+					<div class="table">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<th width="16px"></th>
+								<th>Nombre</th>
+								<th width="50px">Bytes</th>
+								<th width="130px" class="ac">Operaciones</th>
+							</tr>
+					<?Guru if (ne(ruta,"/")) { ?>
+							<tr>
+								<td><a class="ico dir"> </a></td>
+								<td><h3><a href="<?Guru print("?dir=",ultimo_dir,"&catalogo=",catalogo) ?>">[Atras]</a></h3></td>
+								<td>[DIR]</td>
+								<td></td>
+							</tr>
+					<?Guru } ?>
+
+<?Guru 
+			if (sql.abrir(config.leer(http.absoluto("catalogos.conf"), catalogo, "catalogo"))) {
+				# Consulta para extraer los directorios
+				consulta=str.concat("select distinct(substring(substring(d.NOMBRE from char_length('", ruta, "')+1) from 1 for position ('/' in substring(d.NOMBRE from char_length('", ruta, "')+1))))
+										from CATALOGO c, DIRECTORIO d 
+										where c.id_directorio = d.id_directorio and
+											d.NOMBRE like '", ruta, "%' and char_length(d.NOMBRE) > 1")
+
+				if (ne(sql.ejecutar(consulta),"")) {
+
+					var("directorio")
+					while (sql.extraer()) { 
+						directorio=sql.columna("1")
+						if (ne(directorio,"")) {
+?>
+							<tr>
+							<!--	<td><input type="checkbox" class="checkbox" /></td> -->
+								<td><a class="ico dir"> </a></td>
+								<td><h3><a href="<?Guru print("?dir=",ruta,http.urlencode(directorio),"&catalogo=",catalogo) ?>"> <?Guru print(directorio) ?></a></h3></td>
+								<td>[DIR]</td>
+								<td></td>
+							</tr>
+<?Guru 
+						}
+					} # del while
+				} # if de ejecutar
+
+				var("total_archivos", "0")
+				var("bytes", "0")
+
+                consulta=str.concat("select a.NOMBRE, c.id_catalogo, a.tamanio from CATALOGO c, DIRECTORIO d, ARCHIVO a
+									where c.ID_DIRECTORIO = d.ID_DIRECTORIO and c.ID_ARCHIVO = a.ID_ARCHIVO
+								    and d.NOMBRE = '", ruta, "'")
+
+                if (ne(sql.ejecutar(consulta),"")) {
+
+					var("archivo")
+	                while (sql.extraer()) {
+    	                archivo=sql.columna("1")
+?>
+							<tr>
+								<td><a href="#" class="ico file"> </a></td>
+								<td><h3><a href="<?Guru print("descargar.guru?id=",sql.columna("2"),"&catalogo=",catalogo,"&o=v") ?>"><?Guru print(archivo) ?></a></h3></td>
+								<td><?Guru bytes=sum(bytes, sql.columna("3")) print(algo.leible(sql.columna("3"))) ?></td>
+								<td>
+									<a href="descargar.guru?<?Guru print("id=", sql.columna("2"), "&catalogo=", catalogo)?>" class="ico del">Descargar</a>
+									<a href="descargar.guru?<?Guru print("id=", sql.columna("2"), "&catalogo=", catalogo, "&o=v")?>" class="ico edit">Ver</a>
+								</td>
+
+							</tr>
+		<?Guru
+					total_archivos=inc(total_archivos)	
+					} # while  
+				} # if de ejecutar
+		}  #if de apertura de base de datos
+?>
+						</table>
+						<!-- Pagging -->
+						<div class="pagging">
+							<div class="left" title=<?Guru print("\"",total_archivos, " Archivos, ", bytes," Bytes\"") ?> >Mostrando <?Guru print(total_archivos) ?> Archivos - <?Guru print(algo.leible(bytes)," Bytes (", bytes ,").") ?></div>
+						</div>
+						<!-- End Pagging -->
+					</div>
+					<!-- Table -->
+					
+				</div>
+				<!-- End Box -->
+		<?Guru } ?>	
+
+			</div>
+			<!-- End Content -->
+			
+			<div class="cl">&nbsp;</div>			
+		</div>
+		<!-- Main -->
+	</div>
+</div>
+<!-- End Container -->
+
+<!-- Footer -->
+<div id="footer">
+	<div class="shell">
+		<span class="left">&copy; 2013 - PlanetaGuru</span>
+		<span class="right">
+			Design by <a href="http://www.planetaguru.com.ar" target="_blank" title="www.planetaguru.com.ar">El Guru</a>
+		</span>
+	</div>
+</div>
+<!-- End Footer -->
+	
+</body>
+</html>
+

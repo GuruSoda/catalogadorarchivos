@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8F78C324-0860-4DEA-879B-2AB834806E98}</ProjectGuid>
+    <RootNamespace>Catalogar</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(VCInstallDir)\..\..\Microsoft Platform SDK\Include;..\..\..\boost;..\..\..\Librerias\argtable;..\..\..\Librerias;..\..\..\Librerias\polarssl\include;..\Comun</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;IBPP_WINDOWS;BOOST_REGEX_NO_LIB;BOOST_ALL_NO_LIB;BOOST_REGEX_USE_CPP_LOCALE;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;Advapi32.lib;tre.lib</AdditionalDependencies>
+      <OutputFile>$(SolutionDir)..\bin\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(VCInstallDir)\..\..\Microsoft Platform SDK\lib;..\..\..\Librerias\argtable\tre;..\Comun</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(VCInstallDir)\..\..\Microsoft Platform SDK\Include;..\..\..\boost;..\..\..\Librerias;..\..\..\Librerias\argtable;..\..\..\Librerias\polarssl\include;..\Comun</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;IBPP_WINDOWS;_CRT_SECURE_NO_WARNINGS;BOOST_ALL_NO_LIB</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;Advapi32.lib;tre.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(VCInstallDir)\..\..\Microsoft Platform SDK\lib;..\..\..\Librerias\argtable\tre;..\Comun</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Librerias\ibpp\all_in_one.cpp" />
+    <ClCompile Include="..\..\..\Librerias\GuruFDBBase.cpp" />
+    <ClCompile Include="..\..\..\Librerias\polarssl\library\md5.c" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\..\Librerias\polarssl\library\sha1.c" />
+    <ClCompile Include="..\..\..\Librerias\polarssl\library\sha4.c" />
+    <ClCompile Include="..\..\..\Librerias\argtable\arg_dbl.c" />
+    <ClCompile Include="..\..\..\Librerias\argtable\arg_end.c" />
+    <ClCompile Include="..\..\..\Librerias\argtable\arg_file.c" />
+    <ClCompile Include="..\..\..\Librerias\argtable\arg_int.c" />
+    <ClCompile Include="..\..\..\Librerias\argtable\arg_lit.c" />
+    <ClCompile Include="..\..\..\Librerias\argtable\arg_rem.c" />
+    <ClCompile Include="..\..\..\Librerias\argtable\arg_rex.c" />
+    <ClCompile Include="..\..\..\Librerias\argtable\arg_str.c" />
+    <ClCompile Include="..\..\..\Librerias\argtable\argtable2.c" />
+    <ClCompile Include="..\..\..\Librerias\argtable\getopt.c" />
+    <ClCompile Include="..\..\..\Librerias\argtable\getopt1.c" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\c_regex_traits.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\cpp_regex_traits.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\cregex.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\fileiter.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\icu.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\instances.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\posix_api.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\regex.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\regex_debug.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\regex_raw_buffer.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\regex_traits_defaults.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\static_mutex.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\usinstances.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\w32_regex_traits.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\wc_regex_traits.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\wide_posix_api.cpp" />
+    <ClCompile Include="..\..\..\boost\libs\regex\src\winstances.cpp" />
+    <ClCompile Include="..\Comun\ModeloCatalogo.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Librerias\GuruFDBBase.h" />
+    <ClInclude Include="..\..\..\Librerias\argtable\argtable2.h" />
+    <ClInclude Include="..\..\..\Librerias\argtable\getopt.h" />
+    <ClInclude Include="..\Comun\CatalogoActualizar.hpp" />
+    <ClInclude Include="..\Comun\CatalogoDebug.hpp" />
+    <ClInclude Include="..\Comun\CatalogoInfo.hpp" />
+    <ClInclude Include="..\Comun\ModeloCatalogo.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

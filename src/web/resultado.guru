@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=iso8859-1" />
+	<title>Catalogador de Archivos</title>
+	<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+</head>
+<body>
+<?Guru
+
+var("resultados_x_pagina", "30")
+var("botones", "8")
+
+var("pagina", http.parametro("p"))
+var("busqueda", http.parametro("b"))
+var("catalogo", http.parametro("catalogo"))
+var("total_paginas", "1")
+
+if (eq(pagina,"")) pagina="1"
+
+?>
+
+<!-- Container -->
+<div id="container">
+	<div class="shell">
+
+		<!-- Small Nav -->
+		<div class="small-nav">
+			<a href="index.guru" title="Nueva Busqueda">Busqueda</a>
+			<?Guru if (busqueda) print("<span>&gt;</span> ", busqueda) ?>
+		</div>
+		<!-- End Small Nav -->
+
+		<?Guru 
+			if (sql.abrir(config.leer(http.absoluto("catalogos.conf"), catalogo, "catalogo"))) {
+				var("consulta")
+				var("total_registros")
+				total_registros=str.concat("select count(*) from ( select c.ID_CATALOGO
+									from CATALOGO c, ARCHIVO a, DIRECTORIO d
+									where c.ID_ARCHIVO = a.ID_ARCHIVO and c.ID_DIRECTORIO = d.ID_DIRECTORIO and
+									      ( lower(d.NOMBRE) like lower('%", busqueda, "%') or 
+										  lower(a.NOMBRE) like lower('%", busqueda, "%') )) ")
+
+				consulta=str.concat("select d.NOMBRE,a.NOMBRE, a.TAMANIO, a.FECHA, c.ID_CATALOGO
+									from CATALOGO c, ARCHIVO a, DIRECTORIO d
+									where c.ID_ARCHIVO = a.ID_ARCHIVO and c.ID_DIRECTORIO = d.ID_DIRECTORIO and
+									      ( lower(d.NOMBRE) like lower('%", busqueda, "%') or 
+										  lower(a.NOMBRE) like lower('%", busqueda, "%') ) ")
+					
+				if (sql.ejecutar(total_registros)) {
+					sql.extraer()
+					total_registros=sql.columna("1")
+					sql.cerrar()
+				}
+
+				if (ne(pagina, "0")) { 
+					var("desde", "1")
+					var("hasta", "1")
+					desde=dec(mul(pagina, resultados_x_pagina), dec(resultados_x_pagina))
+					hasta=inc(desde, resultados_x_pagina)
+			
+					consulta=(consulta " rows " desde " to " dec(hasta))
+				}
+
+				if (le(total_registros, resultados_x_pagina)) { 
+					resultados_x_pagina=total_registros
+					total_paginas="1"
+				} else  {
+					total_paginas=div(total_registros, resultados_x_pagina)
+
+					if (mod(total_registros, resultados_x_pagina)) 
+						total_paginas=inc(total_paginas)
+				}
+				
+				if (sql.ejecutar(consulta)) {
+					consulta=""
+				} else { sql.cerrar() ?>
+				<!-- Message Error -->
+				<div class="msg msg-error">
+					<p><strong>No se ha encontrado nada!</strong></p>
+					<a href="index.guru" class="close">close</a>
+				</div>
+				<!-- End Message Error -->
+				<?Guru 
+				}
+			} else {  ?>
+					<!-- Message Error -->
+					<div class="msg msg-error">
+					<p><strong>Error abriendo el Catalogo: <br/>- <?Guru print(sql.error()) ?> </strong></p>
+					<a href="index.guru" class="close">close</a>
+					</div>
+					<!-- End Message Error -->
+			<?Guru sql.cerrar() } ?>
+		
+		<br />
+		<!-- Main -->
+		<div id="main">
+			<div class="cl">&nbsp;</div>
+			
+			<!-- Content -->
+			<div id="content">
+				
+				<!-- Box -->
+				<div class="box">
+					<!-- Box Head -->
+					<div class="box-head">
+							<h2 class="left">Resultado(<?Guru print(total_registros) ?>) </h2>
+<!--
+						<div class="right">
+							<label>Buscar en la busqueda</label>
+							<input type="text" class="field small-field" />
+							<input type="submit" class="button" value="search" />
+						</div>
+-->
+					</div>
+					<!-- End Box Head -->	
+
+					<!-- Table -->
+					<div class="table">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<th style="width:85%;"> Nombre</th>
+								<th class="derecha" style="width:3%;"> Bytes</th>
+								<!-- <th class="derecha" style="width:100px;"> Fecha</th> -->
+								<th class="derecha" style="width:12%;"> Operaciones</th> 
+							</tr>
+							<?Guru
+						   		var("total", "0")
+								var("bytes", "0")
+								while (sql.extraer()) {
+							?>
+							<tr>
+								<td><h3 title=<?Guru print("id:", sql.columna("5"))?>><?Guru print(str.concat(sql.columna("1"), sql.columna("2")))?></h3></td>
+								<td class="tamanio" title=<?Guru print("\"",sql.columna("3")," Bytes\"")?>><?Guru print(algo.leible(sql.columna("3")))?></td>
+								<!--	<td class="fecha"><?Guru print(sql.columna("4"))?></td> -->
+								<td>
+									<a href="descargar.guru?<?Guru print("id=", sql.columna("5"), "&catalogo=", catalogo)?>" class="ico del">Descargar</a>
+									<a href="descargar.guru?<?Guru print("id=", sql.columna("5"), "&catalogo=", catalogo, "&o=v")?>" class="ico edit">Ver</a>
+								</td>
+							</tr>
+						<?Guru total=inc(total) bytes=inc(bytes, sql.columna("3")) } sql.cerrar() ?>
+						
+						</table>
+							<!-- Pagging -->
+						<div class="pagging">
+							<div class="left" title=<?Guru print("\"",total, " Archivos, ", bytes," Bytes\"") ?> >Mostrando <?Guru print(total) ?> Coincidencias de <?Guru print(total_registros) ?> - <?Guru print(algo.leible(bytes)," Bytes (", bytes ,").") ?></div>
+							<div class="right">
+								<?Guru 
+								var("param")
+
+								busqueda=http.urlencode(busqueda)
+								param = ("?b=",busqueda,"&catalogo=",catalogo,"&")
+
+								# para los botones de navegacion 
+								if (gt(pagina, "1")) print("<a title=\"Pagina Anterior\" href=", param, "p=", dec(pagina),">Anterior</a>")
+
+								var("nro_boton", "1")
+								var("botonera_init", "1") # primer valor de la botonera
+
+								if (le(total_paginas,botones)) botones=total_paginas
+
+								if (gt(pagina, div(botones,"2"))) {
+									if (ge(pagina, dec(total_paginas, div(botones,"2"))))
+										botonera_init=dec(total_paginas, dec(botones))
+									else
+										botonera_init=dec(pagina, div(botones,"2"))
+								}
+
+								
+								nro_boton=botonera_init
+
+                              	# boton de primera pagina con continuacion al resto
+                                if (gt(botonera_init,"1")) {
+                                    print("<a title=\"Primera Pagina\" href=", param, "p=1>1</a>")
+									if (ne(nro_boton,"2")) print("<span>...</span>")
+                                }
+ 
+								# armo la linea de botones
+								while (lt(nro_boton, sum(botonera_init, botones))) {
+									if (eq(nro_boton, pagina)) print ("<span>", nro_boton, "</span>")
+									else print ("<a href=",param, "p=", nro_boton, ">",nro_boton,"</a>") 
+
+									nro_boton=inc(nro_boton)
+								}
+								
+								# boton de continuacion a ultima pagina
+								if (gt(total_paginas,botones)) {
+									if (lt(sum(pagina,div(botones,"2")), total_paginas)) {
+										print("<span>...</span>")
+										print("<a title=\"Ultima Pagina\" href=", param, "p=",total_paginas,">",total_paginas,"</a>")
+									}
+								}
+
+								# boton de siguiente pagina
+								if (lt(pagina, total_paginas)) 
+									print("<a title=\"Pagina Siguiente\" href=", param, "p=",inc(pagina), ">Siguiente</a>")
+								
+								# Si tengo una sola pagina, no muestro el boton de todo
+								if (ne(total_paginas, "1")) print("<a title=\"Listo Todo\" href=", param,"p=0>Todo</a>")
+								# comentario anti-error
+
+								?>
+							</div>
+						</div>
+						<!-- End Pagging -->
+		
+					</div>
+					<!-- Table -->
+					
+				</div>
+				<!-- End Box -->
+
+
+			</div>
+			<!-- End Content -->
+			
+			
+			<div class="cl">&nbsp;</div>			
+		</div>
+		<!-- Main -->
+	</div>
+</div>
+<!-- End Container -->
+
+<!-- Footer -->
+<div id="footer">
+	<div class="shell">
+		<span class="left">&copy; 2013 - PlanetaGuru</span>
+		<span class="right">
+			Design by <a href="http://www.planetaguru.com.ar" target="_blank" title="www.planetaguru.com.ar">El Guru</a>
+		</span>
+	</div>
+</div>
+<!-- End Footer -->
+
+</body>
+</html>
+
